@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Canon.cs" />
     <Compile Include="Assets\Scripts\CanonMan.cs" />
+    <Compile Include="Assets\Scripts\ChangeSceneButton.cs" />
     <Compile Include="Assets\Scripts\Fire.cs" />
     <Compile Include="Assets\Scripts\Mola.cs" />
     <Compile Include="Assets\Scripts\Portal.cs" />

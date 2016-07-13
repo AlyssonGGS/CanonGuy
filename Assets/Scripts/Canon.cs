@@ -16,10 +16,13 @@ public class Canon : MonoBehaviour {
     {
         if (Input.touchCount > 0)
         {
-            dir = main.ScreenToWorldPoint(Input.GetTouch(0).position);//conversao de pixels pra "metro"
-            dir -= transform.position;
-            dir.z = 0;
-            transform.up = (dir/dir.magnitude);
+            if(Input.touches[0].phase == TouchPhase.Began || Input.touches[0].phase == TouchPhase.Moved)
+            { 
+                dir = main.ScreenToWorldPoint(Input.GetTouch(0).position);//conversao de pixels pra "metro"
+                dir -= transform.position;
+                dir.z = 0;
+                transform.up = (dir/dir.magnitude);
+            }
         }
    	}
 }
