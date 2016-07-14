@@ -3,35 +3,45 @@ using UnityEngine.SceneManagement;
 public class CanonMan : MonoBehaviour
 {
     Fire fireButton;
+    ChangeLevelButton changeLevelButton;
     Rigidbody2D rigidbody;
     SpriteRenderer renderer;
-    bool isGround, teleport;
+    //variavel de controle para dizer se ele acabou de sair de um transporte ou n
+    bool teleport;
     // Use this for initialization
     void Start()
     {
         fireButton = GameObject.Find("FireButton").GetComponent<Fire>();
+        changeLevelButton = GameObject.Find("NextLevelButton").GetComponent<ChangeLevelButton>();
+
         rigidbody = GetComponent<Rigidbody2D>();
         renderer = GetComponent<SpriteRenderer>();
-        isGround = false;
+        
         teleport = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //caso possa atirar
         if (fireButton.GetComponent<Fire>().canShot)
         {
+            //liga a gravidade
             rigidbody.gravityScale = 1;
+            //adiciona a força de movimento de acordo com a direção do canhão(transform.parent.up)
             rigidbody.AddForce(transform.parent.up * fireButton.force, ForceMode2D.Impulse);
+            //desliga o canhao
             fireButton.canShot = false;
+            //desliga a ligação entre canhao e homem bala
             transform.SetParent(null);
         }
+        //quando estiver em movimento
         if (!transform.parent)
         {
-            if (rigidbody.velocity != Vector2.zero && !isGround)
+            ///ajeita a posição do personagem de acordo com o movimento
+            if (rigidbody.velocity != Vector2.zero)
                 transform.up = rigidbody.velocity.normalized;
-            else
-                transform.up = Vector2.right;
+            //ajeita a direção do sprite
             if (rigidbody.velocity.x > 0)
                 renderer.flipX = false;
             else
@@ -41,29 +51,33 @@ public class CanonMan : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D c)
     {
-        //derrota
-        if (c.gameObject.CompareTag("Ground"))
+        //se colidir com o chao ou parede
+        if (c.gameObject.CompareTag("Ground") || c.gameObject.CompareTag("Wall"))
         {
-            isGround = true;
+            //religa o botao dizendo que perdeu(é a parte do true)
+            changeLevelButton.activate(true);
         }
-        //vitoria
-        else if (c.gameObject.CompareTag("Target"))
-        {
-            Debug.Log("gg");
-        }
-
     }
 
     void OnTriggerEnter2D(Collider2D c)
     {
+        //caso toque no portal
         if (c.gameObject.CompareTag("Portal") && !teleport)
         {
+            //manda o player pra posição do par do portal
             rigidbody.position = c.gameObject.GetComponent<Portal>().getPairPosition();
+            //logica do teleporte
             teleport = true;
         }
         else if (c.gameObject.CompareTag("Spring"))
         {
+            //Adiciona uma nova força na direção da mola de acordo com a velocidade e o fato de multiplicação da mola
             rigidbody.AddForce(c.gameObject.transform.up * c.gameObject.GetComponent<Mola>().mult * rigidbody.velocity.magnitude, ForceMode2D.Impulse);
+        }
+        else if (c.gameObject.CompareTag("Target"))
+        {
+            //religa o botao dizendo que ganhou(é a parte do false)
+            changeLevelButton.activate(false);
         }
     }
 
