@@ -11,6 +11,7 @@ public class ChangeSceneButton : MonoBehaviour
     //quando for criar alguma cena, seja de vitoria, derrota, menu, etc, tem que salvar dentro da pasta de scenes e depois colocar no build setings
     void OnMouseDown()
     {
-        SceneManager.LoadScene(scene);
+        if(scene.Length > 0) SceneManager.LoadScene(scene);
+        Application.Quit();
     }
 }
