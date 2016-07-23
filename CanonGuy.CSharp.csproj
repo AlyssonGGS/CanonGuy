@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\ChangeLevelButton.cs" />
     <Compile Include="Assets\Scripts\ChangeSceneButton.cs" />
     <Compile Include="Assets\Scripts\Fire.cs" />
+    <Compile Include="Assets\Scripts\InterfaceManager.cs" />
     <Compile Include="Assets\Scripts\Mola.cs" />
     <Compile Include="Assets\Scripts\Portal.cs" />
   </ItemGroup>

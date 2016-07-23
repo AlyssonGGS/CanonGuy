@@ -5,23 +5,30 @@ public class Fire : MonoBehaviour
 {
     public float force { get; set; }
     public bool canShot { get; set; }
-
+    private bool charging;
     void Start() { force = 30; }
 
-    void OnMouseDown()
+    public void turnOffCanon()
     {
         canShot = false;
         GameObject.Find("Canon").GetComponent<Canon>().enabled = false;
     }
 
-    void OnMouseOver()
+    public void addForce()
     {
-       if(Input.touchCount > 0 && force < 150)
-        force += Time.deltaTime * 30;
+        charging = true;
     }
-    void OnMouseUp()
+    public void fire()
     {
+        charging = false;
         canShot = true;
-        GetComponent<Renderer>().enabled = false;
+        gameObject.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (force < 150 && charging) { 
+            force += Time.deltaTime * 30;
+        }
     }
 }

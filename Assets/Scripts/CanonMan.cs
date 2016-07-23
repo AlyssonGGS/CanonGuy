@@ -6,13 +6,19 @@ public class CanonMan : MonoBehaviour
     ChangeLevelButton changeLevelButton;
     Rigidbody2D rigidbody;
     SpriteRenderer renderer;
+    InterfaceManager interfaceMan;
+
     //variavel de controle para dizer se ele acabou de sair de um transporte ou n
     bool teleport;
+    void Awake()
+    {
+        interfaceMan = Camera.main.GetComponent<InterfaceManager>();
+    }
     // Use this for initialization
     void Start()
     {
         fireButton = GameObject.Find("FireButton").GetComponent<Fire>();
-        changeLevelButton = GameObject.Find("NextLevelButton").GetComponent<ChangeLevelButton>();
+        changeLevelButton = GameObject.Find("NextLevel").GetComponent<ChangeLevelButton>();
 
         rigidbody = GetComponent<Rigidbody2D>();
         renderer = GetComponent<SpriteRenderer>();
@@ -24,7 +30,7 @@ public class CanonMan : MonoBehaviour
     void Update()
     {
         //caso possa atirar
-        if (fireButton.GetComponent<Fire>().canShot)
+        if (fireButton.canShot)
         {
             //liga a gravidade
             rigidbody.gravityScale = 1;
@@ -55,7 +61,8 @@ public class CanonMan : MonoBehaviour
         if (c.gameObject.CompareTag("Ground") || c.gameObject.CompareTag("Wall"))
         {
             //religa o botao dizendo que perdeu(é a parte do true)
-            changeLevelButton.activate(true);
+            changeLevelButton.setState(true);
+            turnOff();
         }
     }
 
@@ -77,7 +84,8 @@ public class CanonMan : MonoBehaviour
         else if (c.gameObject.CompareTag("Target"))
         {
             //religa o botao dizendo que ganhou(é a parte do false)
-            changeLevelButton.activate(false);
+            changeLevelButton.setState(false);
+            turnOff();
         }
     }
 
@@ -87,5 +95,11 @@ public class CanonMan : MonoBehaviour
         {
             teleport = false;
         }
+    }
+
+    void turnOff()
+    {
+        interfaceMan.playButtonsAnimation();
+        rigidbody.isKinematic = true;
     }
 }
